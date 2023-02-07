@@ -113,8 +113,24 @@ function getData() {
             // get temperature data
             dataIdx = Math.floor(Math.random() * rawData[0].length);
             refreshTempData(dataIdx);
-            // create profile plot
+            // create water level indicator
+            var wLevelX = [20, 35];
+            var wLevelY = [rawData[13][dataIdx],rawData[13][dataIdx]];
+
+            // create temperature profile plot
             var profile_traces = [];
+            // create water level indicator
+            profile_traces.push({
+                name: "Nível d' Água",
+                x: wLevelX,
+                y: wLevelY,
+                mode: 'lines',
+                line: {
+                    dash: 'dash',
+                    widht: '3'
+                },
+                visible: true,
+            });
             profile_traces.push({
                 name: "temperaturas",
                 x: tempVal,
@@ -123,11 +139,17 @@ function getData() {
                 type: 'scatter',
                 visible: true,
             });
+
             // populate raw plot
             var profile_layout = {
                 title: 'Perfil de temperatura',
-                font: { size: 13 },
-                showlegend: false,
+                font: { size: 12 },
+                legend: {
+                    x: 0.6,
+                    xanchor: 'left',
+                    y: 0.5
+                },
+                showlegend: true,
                 xaxis: {
                     title: "Temperatura (°C)",
                     range: [20, 35]
@@ -136,6 +158,7 @@ function getData() {
                     title: "Elevação (m)",
                 }
             };
+
             var profile_config = { responsive: true };
             Plotly.newPlot('fig-profile', profile_traces, profile_layout, profile_config);
 
@@ -181,6 +204,9 @@ function getData() {
                 dateString = dateString.substring(0, dateString.length - 8)
                 profile_layout.title.text = "Perfil de temperatura<br>" + dateString;
                 profile_layout.title.size = 10;
+                // update water level indicator
+                profile_traces[0].y[0] = rawData[13][dataIdx];
+                profile_traces[0].y[1] = rawData[13][dataIdx];
                 Plotly.update('fig-profile', profile_traces, profile_layout);
                 // update depletion figure pointer
                 var nszdPlot = document.getElementById("fig-depletion");
@@ -251,8 +277,8 @@ function getData() {
                 font: { size: 13 },
                 showlegend: true,
                 legend: {
-                    x: 1,
-                    xanchor: 'right',
+                    x: 0,
+                    xanchor: 'left',
                     y: 1
                 },
                 xaxis: { title: "Tempo" }
