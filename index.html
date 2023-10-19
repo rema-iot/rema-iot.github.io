@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style/style.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
+    <title>RINC</title>
+</head>
+
+<body>
+    <div class="topnav">
+        <img class="loader" src="img/logo_rinc_inv.svg" data-path="pages/home.html" data-script="./home.js"
+            style="height: 40px;">
+        <div style="float: right">
+            <a class="loader" data-path="pages/products.html">Produtos</a>
+            <a class="loader" data-path="pages/contact.html">Contato</a>
+            <a id="loaderSession" class="loader" style="display: none;"></a>
+            <img class="loader" class="split" src="img/avatar.svg" data-path="pages/login.html" data-script="./login.js"
+                style="height: 30px;">
+        </div>
+    </div>
+
+    <div id="content" class="content"></div>
+
+    <div id="overlay">
+        <h3 id="loadingMsg" style = "text-align: center; color: white;"></h3>
+        <img id="loadingIcon" src="img/animated-loading-icon-3.jpg" width="100pt"></a>
+    </div>
+
+    <div class="footer">
+        © 2023 REMA - UFSC <br>
+    </div>
+</body>
+<script src="logic/jQuery 3.7.1.js"></script>
+<script type="module" src="logic/main.js"></script>
+
+</html>
