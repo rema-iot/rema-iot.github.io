@@ -39,8 +39,8 @@ createModule().then(({
 
 // validation method
 function unlockSecret() {
-    var usr = "smtf2023";
-    var psw = "5m7fzoze628";
+    var usr = document.getElementById("in_usr").value;
+    var psw = document.getElementById("in_psw").value;
     var status = secret.unlock(usr, psw);
     var elem = document.getElementById("out_login");
     if (status) {
