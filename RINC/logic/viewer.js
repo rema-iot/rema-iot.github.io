@@ -71,21 +71,19 @@ function measurementsCbk(resp) {
 }
 
 function loadViewerDashboard(data) {
-    $("#dashboard").css('display','block');
-    console.log("data: ", data);
-
+    $("#dashboard").css('display', 'block');
     const keys = Object.keys(data);
     var traces = [];
-    for (var key of keys){
+    for (var key of keys) {
         if (key != "Timestamp")
-        traces.push({
-            name: key,
-            x: data["Timestamp"],
-            y: data[key],
-            line: { shape: 'line' },
-            type: 'scatter',
-            visible: true,
-        });
+            traces.push({
+                name: key,
+                x: data["Timestamp"],
+                y: data[key],
+                line: { shape: 'line' },
+                type: 'scatter',
+                visible: true,
+            });
     }
 
     var layout = {
@@ -97,4 +95,51 @@ function loadViewerDashboard(data) {
     var config = { responsive: true };
 
     Plotly.newPlot('raw_plot', traces, layout, config);
+    var flux = calcFlux(data);
+    plotFlux(flux);
+}
+
+function calcFlux(data) {
+    var flux = { ftSN: [], ftWE: [], ftBT: [], fbSN: [], fbWE: [], fbBT: [] };
+    flux.Timestamp = data["Timestamp"];
+    var diam = 0.1;
+    var height = 0.05;
+    for (var i = 0; i < data["Timestamp"].length; i++) {
+        flux.ftSN.push(-(data["TempFtTN"][i] - data["TempFtTS"][i]) / diam);
+        flux.ftWE.push(-(data["TempFtBE"][i] - data["TempFtBW"][i]) / diam);
+        flux.ftBT.push(-(data["TempFtTN"][i] + data["TempFtTS"][i] -
+            data["TempFtBE"][i] - data["TempFtBW"][i]) / (2 * height));
+        flux.fbSN.push(-(data["TempFbTN"][i] - data["TempFbTS"][i]) / diam);
+        flux.fbWE.push(-(data["TempFbBE"][i] - data["TempFbBW"][i]) / diam);
+        flux.fbBT.push(-(data["TempFbTN"][i] + data["TempFbTS"][i] -
+            data["TempFbBE"][i] - data["TempFbBW"][i]) / (2 * height));
+    }
+    console.log("flux: ", flux);
+    return flux;
+}
+
+function plotFlux(flux) {
+    const keys = Object.keys(flux);
+    var traces = [];
+    for (var key of keys) {
+        if (key != "Timestamp")
+            traces.push({
+                name: key,
+                x: flux["Timestamp"],
+                y: flux[key],
+                line: { shape: 'line' },
+                type: 'scatter',
+                visible: true,
+            });
+    }
+
+    var layout = {
+        title: 'Fluxos de calor',
+        font: { size: 13 },
+        showlegend: true,
+    };
+
+    var config = { responsive: true };
+
+    Plotly.newPlot('flux_plot', traces, layout, config);
 }
