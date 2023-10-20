@@ -87,9 +87,10 @@ function loadViewerDashboard(data) {
     }
 
     var layout = {
-        title: 'Dados brutos',
+        title: 'Variáveis da estação',
         font: { size: 13 },
         showlegend: true,
+        xaxis:{title: {text:"Tempo"}}
     };
 
     var config = { responsive: true };
@@ -97,6 +98,8 @@ function loadViewerDashboard(data) {
     Plotly.newPlot('raw_plot', traces, layout, config);
     var flux = calcFlux(data);
     plotFlux(flux);
+    var erg = calcEnergy(flux);
+    plotEnergy(erg);
 }
 
 function calcFlux(data) {
@@ -104,17 +107,17 @@ function calcFlux(data) {
     flux.Timestamp = data["Timestamp"];
     var diam = 0.1;
     var height = 0.05;
+    var k = 1.5; // thermal conductivity W/m K
     for (var i = 0; i < data["Timestamp"].length; i++) {
-        flux.ftSN.push(-(data["TempFtTN"][i] - data["TempFtTS"][i]) / diam);
-        flux.ftWE.push(-(data["TempFtBE"][i] - data["TempFtBW"][i]) / diam);
-        flux.ftBT.push(-(data["TempFtTN"][i] + data["TempFtTS"][i] -
-            data["TempFtBE"][i] - data["TempFtBW"][i]) / (2 * height));
-        flux.fbSN.push(-(data["TempFbTN"][i] - data["TempFbTS"][i]) / diam);
-        flux.fbWE.push(-(data["TempFbBE"][i] - data["TempFbBW"][i]) / diam);
-        flux.fbBT.push(-(data["TempFbTN"][i] + data["TempFbTS"][i] -
-            data["TempFbBE"][i] - data["TempFbBW"][i]) / (2 * height));
+        flux.ftSN.push(-k * (data["TempFtTN"][i] - data["TempFtTS"][i]) / diam);
+        flux.ftWE.push(-k * (data["TempFtBE"][i] - data["TempFtBW"][i]) / diam);
+        flux.ftBT.push(-k * ((data["TempFtTN"][i] + data["TempFtTS"][i] -
+            data["TempFtBE"][i] - data["TempFtBW"][i]) / (2 * height)));
+        flux.fbSN.push(-k * ((data["TempFbTN"][i] - data["TempFbTS"][i]) / diam));
+        flux.fbWE.push(-k * ((data["TempFbBE"][i] - data["TempFbBW"][i]) / diam));
+        flux.fbBT.push(-k * ((data["TempFbTN"][i] + data["TempFbTS"][i] -
+            data["TempFbBE"][i] - data["TempFbBW"][i]) / (2 * height)));
     }
-    console.log("flux: ", flux);
     return flux;
 }
 
@@ -137,9 +140,51 @@ function plotFlux(flux) {
         title: 'Fluxos de calor',
         font: { size: 13 },
         showlegend: true,
+        xaxis:{title: {text:"Tempo"}},
+        yaxis:{title: {text:"Fluxo de calor (W/m²)"}}
     };
 
     var config = { responsive: true };
 
     Plotly.newPlot('flux_plot', traces, layout, config);
+}
+
+function calcEnergy(flux){
+    var erg = { Timestamp:[flux.Timestamp[0]], EtSN: [0], EtWE: [0], EtBT: [0], EbSN: [0], EbWE: [0], EbBT: [0] };
+    for (var i = 1; i < flux["Timestamp"].length; i++){
+        erg.Timestamp.push(0.5*(flux.Timestamp[i]+flux.Timestamp[i-1]));
+        erg.EtSN.push(erg.EtSN[i-1] + 0.5*(flux.ftSN[i] + flux.ftSN[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
+        erg.EtWE.push(erg.EtWE[i-1] + 0.5*(flux.ftWE[i] + flux.ftWE[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
+        erg.EtBT.push(erg.EtBT[i-1] + 0.5*(flux.ftBT[i] + flux.ftBT[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
+        erg.EbSN.push(erg.EbSN[i-1] + 0.5*(flux.fbSN[i] + flux.fbSN[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
+        erg.EbWE.push(erg.EbWE[i-1] + 0.5*(flux.fbWE[i] + flux.fbWE[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
+        erg.EbBT.push(erg.EbBT[i-1] + 0.5*(flux.fbBT[i] + flux.fbBT[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
+    }
+    return erg;
+}
+
+function plotEnergy(erg){
+    const keys = Object.keys(erg);
+    var traces = [];
+    for (var key of keys) {
+        if (key != "Timestamp")
+            traces.push({
+                name: key,
+                x: erg["Timestamp"],
+                y: erg[key],
+                line: { shape: 'line' },
+                type: 'scatter',
+                visible: true,
+            });
+    }
+    var layout = {
+        title: 'Calor Liberado',
+        font: { size: 13 },
+        showlegend: true,
+        xaxis:{title: {text:"Tempo"}},
+        yaxis:{title: {text:"Calor (J/m²)"}}
+    };
+    var config = { responsive: true };
+
+    Plotly.newPlot('erg_plot', traces, layout, config);
 }

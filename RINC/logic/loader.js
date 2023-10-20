@@ -9,6 +9,6 @@ export async function loadJS(address, async = true) {
   import(address).then((module) => {
     module.onLoadScript();
   }).catch((err) => {
-    console.error(err);
+    console.log(err);
   });
 }
