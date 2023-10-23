@@ -1,6 +1,7 @@
 import { post } from "./post.js";
 import { SESSION, RINC_API } from "./login.js";
 import { overlayOn, overlayOff } from "./main.js";
+import { signalClean } from "./signal.js";
 
 export function onLoadScript() {
     requestStationList();
@@ -72,6 +73,8 @@ function measurementsCbk(resp) {
 
 function loadViewerDashboard(data) {
     $("#dashboard").css('display', 'block');
+    removeBadTimestamps(data);
+    cleanData(data);
     const keys = Object.keys(data);
     var traces = [];
     for (var key of keys) {
@@ -100,6 +103,28 @@ function loadViewerDashboard(data) {
     plotFlux(flux);
     var erg = calcEnergy(flux);
     plotEnergy(erg);
+}
+
+function removeBadTimestamps(data){
+    const keys = Object.keys(data);
+    var idx = 0;
+    while(idx < data.Timestamp.length){
+        if (Number.isNaN(data.Timestamp[idx]) || data.Timestamp[idx] == '#NUM!'){
+            for (var key of keys){
+                data[key].splice(idx, 1);
+            }
+        } else {
+            idx++;
+        }
+    }
+}
+
+function cleanData(data){
+    const winLen = 20; // moving window size
+    const keys = Object.keys(data);
+    for (var key of keys){
+        signalClean(data[key], winLen);
+    }
 }
 
 function calcFlux(data) {
@@ -151,17 +176,51 @@ function plotFlux(flux) {
 
 function calcEnergy(flux){
     var erg = { Timestamp:[flux.Timestamp[0]], EtSN: [0], EtWE: [0], EtBT: [0], EbSN: [0], EbWE: [0], EbBT: [0] };
+    var dE, tAvg, dt;
     for (var i = 1; i < flux["Timestamp"].length; i++){
-        erg.Timestamp.push(0.5*(flux.Timestamp[i]+flux.Timestamp[i-1]));
-        erg.EtSN.push(erg.EtSN[i-1] + 0.5*(flux.ftSN[i] + flux.ftSN[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
-        erg.EtWE.push(erg.EtWE[i-1] + 0.5*(flux.ftWE[i] + flux.ftWE[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
-        erg.EtBT.push(erg.EtBT[i-1] + 0.5*(flux.ftBT[i] + flux.ftBT[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
-        erg.EbSN.push(erg.EbSN[i-1] + 0.5*(flux.fbSN[i] + flux.fbSN[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
-        erg.EbWE.push(erg.EbWE[i-1] + 0.5*(flux.fbWE[i] + flux.fbWE[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
-        erg.EbBT.push(erg.EbBT[i-1] + 0.5*(flux.fbBT[i] + flux.fbBT[i-1])*(flux.Timestamp[i]-flux.Timestamp[i-1]));
+        tAvg = 0.5 * (flux.Timestamp[i] + flux.Timestamp[i-1]);
+        dt = flux.Timestamp[i] - flux.Timestamp[i-1];
+
+        if (checkNumbers([tAvg, dt])){
+            erg.Timestamp.push(tAvg);
+
+            dE = 0.5*(flux.ftSN[i] + flux.ftSN[i-1]) * dt;
+            if (!Number.isNaN(dE)) {erg.EtSN.push(erg.EtSN[i-1] + dE)}
+            else {erg.EtSN.push(erg.EtSN[i-1])}
+
+            dE = 0.5*(flux.ftWE[i] + flux.ftWE[i-1]) * dt;
+            if (!Number.isNaN(dE)) {erg.EtWE.push(erg.EtWE[i-1] + dE)}
+            else {erg.EtWE.push(erg.EtWE[i-1])}
+
+            dE = 0.5*(flux.ftBT[i] + flux.ftBT[i-1]) * dt;
+            if (!Number.isNaN(dE)) {erg.EtBT.push(erg.EtBT[i-1] + dE)}
+            else {erg.EtBT.push(erg.EtBT[i-1])}
+
+            dE = 0.5*(flux.fbSN[i] + flux.fbSN[i-1]) * dt;
+            if (!Number.isNaN(dE)) {erg.EbSN.push(erg.EbSN[i-1] + dE)}
+            else {erg.EbSN.push(erg.EbSN[i-1])}
+
+            dE = 0.5*(flux.fbWE[i] + flux.fbWE[i-1]) * dt;
+            if (!Number.isNaN(dE)) {erg.EbWE.push(erg.EbWE[i-1] + dE)}
+            else {erg.EbWE.push(erg.EbWE[i-1])}
+
+            dE = 0.5*(flux.fbBT[i] + flux.fbBT[i-1]) * dt;
+            if (!Number.isNaN(dE)) {erg.EbBT.push(erg.EbBT[i-1] + dE)}
+            else {erg.EbBT.push(erg.EbBT[i-1])}
+        }
     }
     return erg;
 }
+
+function checkNumbers(vals){
+    var valid = true;
+    for (var val of vals){
+        valid = valid && !Number.isNaN(val)
+    }
+    return valid;
+}
+
+
 
 function plotEnergy(erg){
     const keys = Object.keys(erg);

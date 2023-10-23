@@ -83,7 +83,7 @@ function loginCbk(resp) {
     } else if (resp.status == "FAILED") {
         destroySession();
         inactiveSessionInterface();
-        alert("Senha inválida")
+        alert("Usuário ou senha inválida")
         console.log("loginCbk: failed");
         console.log(resp.msg);
     } else {
