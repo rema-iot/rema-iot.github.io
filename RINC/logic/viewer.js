@@ -78,10 +78,10 @@ function loadViewerDashboard(data) {
     const keys = Object.keys(data);
     var traces = [];
     for (var key of keys) {
-        if (key != "Timestamp")
+        if (key != "Timestamp" && key != "Date")
             traces.push({
                 name: key,
-                x: data["Timestamp"],
+                x: data["Date"],
                 y: data[key],
                 line: { shape: 'line' },
                 type: 'scatter',
@@ -93,7 +93,7 @@ function loadViewerDashboard(data) {
         title: 'Variáveis da estação',
         font: { size: 13 },
         showlegend: true,
-        xaxis:{title: {text:"Tempo"}}
+        xaxis: { title: { text: "Tempo" } }
     };
 
     var config = { responsive: true };
@@ -105,12 +105,12 @@ function loadViewerDashboard(data) {
     plotEnergy(erg);
 }
 
-function removeBadTimestamps(data){
+function removeBadTimestamps(data) {
     const keys = Object.keys(data);
     var idx = 0;
-    while(idx < data.Timestamp.length){
-        if (Number.isNaN(data.Timestamp[idx]) || data.Timestamp[idx] == '#NUM!'){
-            for (var key of keys){
+    while (idx < data.Timestamp.length) {
+        if (Number.isNaN(data.Timestamp[idx]) || data.Timestamp[idx] == '#NUM!') {
+            for (var key of keys) {
                 data[key].splice(idx, 1);
             }
         } else {
@@ -119,17 +119,23 @@ function removeBadTimestamps(data){
     }
 }
 
-function cleanData(data){
+function cleanData(data) {
     const winLen = 20; // moving window size
     const keys = Object.keys(data);
-    for (var key of keys){
+    for (var key of keys) {
         signalClean(data[key], winLen);
+    }
+    data.Date = [];
+    for (var stmp of data.Timestamp) {
+        var time = new Date(stmp * 1000);
+        data.Date.push(time);
     }
 }
 
 function calcFlux(data) {
     var flux = { ftSN: [], ftWE: [], ftBT: [], fbSN: [], fbWE: [], fbBT: [] };
-    flux.Timestamp = data["Timestamp"];
+    flux.Timestamp = data.Timestamp;
+    flux.Date = data.Date;
     var diam = 0.1;
     var height = 0.05;
     var k = 1.5; // thermal conductivity W/m K
@@ -150,10 +156,10 @@ function plotFlux(flux) {
     const keys = Object.keys(flux);
     var traces = [];
     for (var key of keys) {
-        if (key != "Timestamp")
+        if (key != "Timestamp" && key != "Date")
             traces.push({
                 name: key,
-                x: flux["Timestamp"],
+                x: flux["Date"],
                 y: flux[key],
                 line: { shape: 'line' },
                 type: 'scatter',
@@ -165,8 +171,8 @@ function plotFlux(flux) {
         title: 'Fluxos de calor',
         font: { size: 13 },
         showlegend: true,
-        xaxis:{title: {text:"Tempo"}},
-        yaxis:{title: {text:"Fluxo de calor (W/m²)"}}
+        xaxis: { title: { text: "Tempo" } },
+        yaxis: { title: { text: "Fluxo de calor (W/m²)" } }
     };
 
     var config = { responsive: true };
@@ -174,47 +180,49 @@ function plotFlux(flux) {
     Plotly.newPlot('flux_plot', traces, layout, config);
 }
 
-function calcEnergy(flux){
-    var erg = { Timestamp:[flux.Timestamp[0]], EtSN: [0], EtWE: [0], EtBT: [0], EbSN: [0], EbWE: [0], EbBT: [0] };
+function calcEnergy(flux) {
+    var erg = { Timestamp: [flux.Timestamp[0]], Date: [flux.Date[0]], EtSN: [0], EtWE: [0], EtBT: [0], EbSN: [0], EbWE: [0], EbBT: [0] };
     var dE, tAvg, dt;
-    for (var i = 1; i < flux["Timestamp"].length; i++){
-        tAvg = 0.5 * (flux.Timestamp[i] + flux.Timestamp[i-1]);
-        dt = flux.Timestamp[i] - flux.Timestamp[i-1];
+    for (var i = 1; i < flux["Timestamp"].length; i++) {
+        tAvg = 0.5 * (flux.Timestamp[i] + flux.Timestamp[i - 1]);
+        var time = new Date(tAvg * 1000);
+        dt = flux.Timestamp[i] - flux.Timestamp[i - 1];
 
-        if (checkNumbers([tAvg, dt])){
+        if (checkNumbers([tAvg, dt])) {
             erg.Timestamp.push(tAvg);
+            erg.Date.push(time);
 
-            dE = 0.5*(flux.ftSN[i] + flux.ftSN[i-1]) * dt;
-            if (!Number.isNaN(dE)) {erg.EtSN.push(erg.EtSN[i-1] + dE)}
-            else {erg.EtSN.push(erg.EtSN[i-1])}
+            dE = 0.5 * (flux.ftSN[i] + flux.ftSN[i - 1]) * dt;
+            if (!Number.isNaN(dE)) { erg.EtSN.push(erg.EtSN[i - 1] + dE) }
+            else { erg.EtSN.push(erg.EtSN[i - 1]) }
 
-            dE = 0.5*(flux.ftWE[i] + flux.ftWE[i-1]) * dt;
-            if (!Number.isNaN(dE)) {erg.EtWE.push(erg.EtWE[i-1] + dE)}
-            else {erg.EtWE.push(erg.EtWE[i-1])}
+            dE = 0.5 * (flux.ftWE[i] + flux.ftWE[i - 1]) * dt;
+            if (!Number.isNaN(dE)) { erg.EtWE.push(erg.EtWE[i - 1] + dE) }
+            else { erg.EtWE.push(erg.EtWE[i - 1]) }
 
-            dE = 0.5*(flux.ftBT[i] + flux.ftBT[i-1]) * dt;
-            if (!Number.isNaN(dE)) {erg.EtBT.push(erg.EtBT[i-1] + dE)}
-            else {erg.EtBT.push(erg.EtBT[i-1])}
+            dE = 0.5 * (flux.ftBT[i] + flux.ftBT[i - 1]) * dt;
+            if (!Number.isNaN(dE)) { erg.EtBT.push(erg.EtBT[i - 1] + dE) }
+            else { erg.EtBT.push(erg.EtBT[i - 1]) }
 
-            dE = 0.5*(flux.fbSN[i] + flux.fbSN[i-1]) * dt;
-            if (!Number.isNaN(dE)) {erg.EbSN.push(erg.EbSN[i-1] + dE)}
-            else {erg.EbSN.push(erg.EbSN[i-1])}
+            dE = 0.5 * (flux.fbSN[i] + flux.fbSN[i - 1]) * dt;
+            if (!Number.isNaN(dE)) { erg.EbSN.push(erg.EbSN[i - 1] + dE) }
+            else { erg.EbSN.push(erg.EbSN[i - 1]) }
 
-            dE = 0.5*(flux.fbWE[i] + flux.fbWE[i-1]) * dt;
-            if (!Number.isNaN(dE)) {erg.EbWE.push(erg.EbWE[i-1] + dE)}
-            else {erg.EbWE.push(erg.EbWE[i-1])}
+            dE = 0.5 * (flux.fbWE[i] + flux.fbWE[i - 1]) * dt;
+            if (!Number.isNaN(dE)) { erg.EbWE.push(erg.EbWE[i - 1] + dE) }
+            else { erg.EbWE.push(erg.EbWE[i - 1]) }
 
-            dE = 0.5*(flux.fbBT[i] + flux.fbBT[i-1]) * dt;
-            if (!Number.isNaN(dE)) {erg.EbBT.push(erg.EbBT[i-1] + dE)}
-            else {erg.EbBT.push(erg.EbBT[i-1])}
+            dE = 0.5 * (flux.fbBT[i] + flux.fbBT[i - 1]) * dt;
+            if (!Number.isNaN(dE)) { erg.EbBT.push(erg.EbBT[i - 1] + dE) }
+            else { erg.EbBT.push(erg.EbBT[i - 1]) }
         }
     }
     return erg;
 }
 
-function checkNumbers(vals){
+function checkNumbers(vals) {
     var valid = true;
-    for (var val of vals){
+    for (var val of vals) {
         valid = valid && !Number.isNaN(val)
     }
     return valid;
@@ -222,14 +230,14 @@ function checkNumbers(vals){
 
 
 
-function plotEnergy(erg){
+function plotEnergy(erg) {
     const keys = Object.keys(erg);
     var traces = [];
     for (var key of keys) {
-        if (key != "Timestamp")
+        if (key != "Timestamp" && key != "Date")
             traces.push({
                 name: key,
-                x: erg["Timestamp"],
+                x: erg["Date"],
                 y: erg[key],
                 line: { shape: 'line' },
                 type: 'scatter',
@@ -240,8 +248,8 @@ function plotEnergy(erg){
         title: 'Calor Liberado',
         font: { size: 13 },
         showlegend: true,
-        xaxis:{title: {text:"Tempo"}},
-        yaxis:{title: {text:"Calor (J/m²)"}}
+        xaxis: { title: { text: "Tempo" } },
+        yaxis: { title: { text: "Calor (J/m²)" } }
     };
     var config = { responsive: true };
 
