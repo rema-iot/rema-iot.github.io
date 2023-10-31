@@ -1,0 +1,11 @@
+<html>
+
+<body>
+    <script type="module" src=../components/FullTime.js></script>
+    <time-formatted id="elem" hour="numeric" minute="numeric" second="numeric"></time-formatted>
+    <script>
+        setInterval(() => elem.setAttribute('datetime', new Date()), 1000); // (5)
+    </script>
+</body>
+
+</html>

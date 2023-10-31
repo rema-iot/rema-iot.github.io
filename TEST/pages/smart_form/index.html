@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--link href="style/style.css" rel="stylesheet"-->
+    <script src="multiStateForm.js"></script>
+    <title>TEST</title>
+</head>
+
+<body>
+    <div>
+        <img id="img_info" src="img/info.png" onclick="toggleView('txt_info')" width="20pt" style="float: right">
+        <h3>Container Name</h3>
+        <p id="txt_info" style="display: none;"> Fill the data and run process </p>
+        <p>More information relevant to the aplication of the action</p>
+        
+        <button id="btn_action" onclick="processData(event)">Process</button>
+    </div>
+
+    <hr>
+    <label for="server_error"> Simulate server error: </label>
+    <input id="server_error" name="server_error" type="checkbox">
+</body>
+
+</html>

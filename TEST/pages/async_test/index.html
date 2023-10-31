@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--link href="style/style.css" rel="stylesheet"-->
+    <script src="async_test.js"></script>
+    <title>TEST</title>
+</head>
+
+<body>
+    <p>This checkbox shuts down after 2s</p>
+    <label for="check2s"> Checkbox with 2s timer </label>
+    <input id="check2s" type="checkbox" onclick="uncheck(event, 2000)">
+    <br>
+    <p>This checkbox shuts down after 5s</p>
+    <label for="check5s"> Checkbox with 5s timer </label>
+    <input id="check5s" type="checkbox" onclick="uncheck(event, 5000)">
+    <br>
+    <p>This checkbox shuts down after fulfilling an internal process that can fail</p>
+    <label id="label" for="check"> Checkbox with process-deppendent duration </label>
+    <input id="check" type="checkbox" onclick="process(event)">
+    <br>
+    <label for="errCtl">Simulate error</label>
+    <input id="errCtl" type="checkbox">
+</body>
+
+</html>
