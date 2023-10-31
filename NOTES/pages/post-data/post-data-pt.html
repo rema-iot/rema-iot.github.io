@@ -1,0 +1,40 @@
+<h2> Postar informação ao Apps Script</h2>
+<p> Para postar informação a uma API do google desenvolvida com Apps Script é necessário usar <i>ajax</i> do jQuery.
+</p>
+<p> A continuação se mostra como enviar um objeto ao servidor com algum tipo de requisição. </p>
+
+<pre>
+    <code>
+        export function post(url, obj, callback) {
+            var data = { obj: JSON.stringify(obj) }; // must double package the object to prevent CORS error
+            var settings = { method: "POST", crossDomain: true, "Access-Control-Allow-Origin": "*", url: url, dataType: "json", data: data, encode: true };
+            $.ajax(settings).done(callback);
+        }
+    </code>
+</pre>
+<ul>
+    <li> O objeto foi convertido en string e empacotado num segundo objeto para prevenir o erro de CORS. </li>
+    <li> O servidor responde com outro objeto que pode ser passado como argumento à função de callback. </li>
+    <li> A URL é o endereço de implantação da API. </li>
+</ul>
+
+<h3> API do servidor </h3>
+<p> Dado que a postagem foi feita mediante o método <code>POST</code>, do lado do servidor a função correspondente tem a
+    forma:
+</p>
+<pre>
+    <code>
+        function doPost(e){
+            var query = JSON.parse(e.parameter.obj);
+            // do something with the information
+            var response = {};
+            // fill response object with relevant information
+            return ContentService
+            .createTextOutput(JSON.stringify(response))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
+    </code>
+</pre>
+<p> No lado do servidor, a variável <code>data</code> é econtrada no campo <code>parameter</code> do evento, o qual contem o pacote
+    <code>obj</code> que pode ser interpretado mediante o <i>parser</i> da biblioteca JSON.
+</p>

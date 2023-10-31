@@ -1,0 +1,16 @@
+<h2> Carregar arquivos externos </h2>
+<p>
+    Para injetar conteudo em html de um arquivo externo dentro de um <it>div</it> pode se usar a seguinte função
+    asíncrona
+</p>
+<pre>
+<code>
+    export async function loadHtml(address, targetID) {
+        const response = await fetch(address);
+        const html = await response.text();
+        var target = document.getElementById(targetID);
+        target.innerHTML = html;
+        console.log("loaded: ", address);
+      }
+</code>
+</pre>
