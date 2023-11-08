@@ -8,7 +8,8 @@ export async function loadHtml(address, targetID) {
 
 export async function loadJS(address, async = true) {
   import(address).then((module) => {
-    module.onLoadScript();
+    console.log("loaded: ", address);
+    module.onLoad();
   }).catch((err) => {
     console.log(err);
   });

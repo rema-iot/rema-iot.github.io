@@ -1,0 +1,59 @@
+:root {
+    --sidenav-width: 200px;
+    --banner-height: 100px;
+}
+
+body {
+    font-family: "Lato", sans-serif;
+    font-size: 12pt;
+}
+
+.topbanner {
+    width: 100%;
+    height: var(--banner-height);
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    color: #f1f1f1;
+    text-align: center;
+    background-image: url("../img/denim.webp");
+    background-repeat:repeat;
+}
+
+.sidenav {
+    height: 100%;
+    max-width: var(--sidenav-width);
+    position: fixed;
+    z-index: 1;
+    top: var(--banner-height);
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidenav a {
+    padding: 6px 6px 6px 32px;
+    text-decoration: none;
+    color: #818181;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav h3 {
+    padding: 6px 6px 6px 32px;
+    color: #818181;
+}
+
+.content {
+    /*position: fixed;*/
+    margin-top: var(--banner-height);
+    margin-left: var(--sidenav-width);
+    padding: 10px 6px 6px 6px;
+    max-width: 500pt;
+    text-align: justify;
+}

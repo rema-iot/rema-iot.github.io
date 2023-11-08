@@ -1,11 +1,85 @@
 <h2> Gestão de cookies </h2>
-<p>
-    Para melhorar a experiência de uso da aplicação Web é importante evitar a
+<p> Para melhorar a experiência de uso da aplicação Web é importante evitar a
     re-autenticação, preservar a localização do usuário no site e se possível
     guardar as preferências ou dados relevantes de formularios. Isso é feito
-    mediante cookies.
-</p>
-<p>
-    As cookies são simplesmente pares de identificador e variável que são
-    armazenados na memoria do navegador, mesmo quando ele é fechado.
-</p>
+    mediante cookies. </p>
+<p> As cookies são simplesmente pares de identificador e variável que são
+    armazenados na memoria do navegador, mesmo quando ele é fechado. O método
+    geral para criar cookies tem a forma. </p>
+
+<pre>
+        <code>
+            document.cookie = "ck_name=ck_value; expires=ex_date; path=/;";
+        </code>
+    </pre>
+<p> Pode-se então criar um método para facilitar a criação de cookies com
+    uma dada duração e unidades temporais explícitas: </p>
+<pre>
+        <code>
+        function setCookie(cname, cvalue, ctime, time_unit) {
+            const d = new Date();
+            switch (time_unit){
+              case 'd': // cookie duration in days to ms
+                d.setTime(d.getTime() + ctime * 24 * 60 * 60 * 1000);
+                break;
+              case 'h': // cookie duration in hours to ms
+                d.setTime(d.getTime() + ctime * 60 * 60 * 1000);
+                break;
+              case 'm': // cookie duration in minutes to ms
+                d.setTime(d.getTime() + ctime * 60 * 1000);
+                break;
+              default:
+                console.log("undefined expiration cookie option");
+                return;
+            }
+            document.cookie = cname + "=" + cvalue + ";expires=" +
+                              d.toUTCString() + ";path=/";
+          }
+        </code>
+    </pre>
+
+<p> Para apagar uma cookie se pode usar setCookie com "cvalue" vazio e duração zero. </p>
+<p> As cookies são armazenadas numa cadeia contínua, por tanto podem ser carregadas juntas usando: </p>
+<pre>
+        <code>
+        let cookies = document.cookie;
+        </code>
+    </pre>
+<p> Pare ler uma única cookie é necessário subdividir o string para identificar o nome apropriado </p>
+<pre>
+        <code>
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i &lt ca.length; i++) {
+              let c = ca[i];
+              while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+              }
+              if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+              }
+            }
+            return "";
+          }
+        </code>
+    </pre>
+
+<h3> Exemplo </h3>
+
+<script src="./pages/cookie-management/main.js"></script>
+
+<p> Crie cookies customizadas de 1min </p>
+<label for="cname"> Nome da cookie: </label><br>
+<input id="cname" type="text"><br>
+<label for="cvalue"> Valor da cookie: </label><br>
+<input id="cvalue" type="text"><br>
+<button id="btn-create-cookie" onclick="exSetCookie()"> CRIAR </button><br><br>
+
+Leia o valor de uma cookie criada
+<label for="cname-get"> Nome da cookie: </label><br>
+<input id="cname-get" type="text"><br>
+<label for="cvalue-get"> Valor da cookie: </label><br>
+<input id="cvalue-get" type="text" disabled><br>
+<button id="btn-read-cookie" onclick="exGetCookie()"> RECUPERAR </button>

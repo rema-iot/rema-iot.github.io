@@ -1,10 +1,13 @@
 <h2> Carregar arquivos externos </h2>
-<p>
-    Para injetar conteudo em html de um arquivo externo dentro de um <it>div</it> pode se usar a seguinte função
-    asíncrona
-</p>
+<p> O conteudo deste site é carregado usando as funções mostradas a continuação,
+    veja o código fonte deste site para entender melhor o funcionamento numa
+    situação real. </p>
+
+<h3> Conteudo HTML </h3>
+<p> Para injetar conteudo em html de um arquivo externo dentro de um <it>div</it>
+  pode se usar a função <code>fetch</code> dentro de uma função asíncrona </p>
 <pre>
-<code>
+    <code>
     export async function loadHtml(address, targetID) {
         const response = await fetch(address);
         const html = await response.text();
@@ -12,5 +15,44 @@
         target.innerHTML = html;
         console.log("loaded: ", address);
       }
-</code>
+    </code>
 </pre>
+
+<em>IMPORTANTE: Na função anterior, o endereço é releativo à posição do arquivo
+  html desde onde se invoca a função <code>loadHtml</code>. </em>
+<p> Também é importante anotar que fazendo ésta importação simples, os scripts
+  dentro do conteudo html não serão executados. Para adicionar funcionalidade
+  ao documento deve se importar o módulo desde o javascript principal usando
+  <code>import</code> sendo que o endereço do js pode ser armazenado dentro
+  de um elemento do conteudo html injetado.
+</p>
+
+<p> Adicionalmente, deve-se prestar atenção aos endereços relativos das imagens
+    que são mostradas no site, por exemplo, a seguinte imagem </p>
+<img src="./pages/load-ext-files/img/calib_screen.jpg">
+<p> Se encontra dentro da mesma pasta deste documento, no entanto, para mostra-la
+    corretamente, seu endereço deve ser escrito com relação ao arquivo html onde
+    está o target do conteudo (neste caso index.html).
+</p>
+
+<h3> Executáveis Java Script </h3>
+<p> Para injetar funcionalidades em JavaScript de um arquivo externo, pode se
+  usar a seguinte função asíncrona </p>
+<pre>
+    <code>
+        export async function loadJS(address, async = true) {
+            import(address).then((module) => {
+              module.onLoad();
+            }).catch((err) => {
+              console.log(err);
+            });
+          }          
+    </code>
+</pre>
+<p>Note que o arquivo deve conter uma função principal chamada <code>onLoad</code>,
+  normalmente encarregada de definir os <it>listeners</it> para os diferêntes
+  componentes do conteudo carregado. </p>
+
+<em>IMPORTANTE: Na função anterior, o endereço é releativo à posição do arquivo
+  javascript desde onde se importa a função <code>loadJS</code>, a qual pode
+  ser diferênte à posição do arquivo contenedor html. </em>

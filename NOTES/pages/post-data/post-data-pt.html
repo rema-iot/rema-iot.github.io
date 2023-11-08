@@ -6,8 +6,17 @@
 <pre>
     <code>
         export function post(url, obj, callback) {
-            var data = { obj: JSON.stringify(obj) }; // must double package the object to prevent CORS error
-            var settings = { method: "POST", crossDomain: true, "Access-Control-Allow-Origin": "*", url: url, dataType: "json", data: data, encode: true };
+            // must double package the object to prevent CORS error
+            var data = { obj: JSON.stringify(obj) }; 
+            var settings = 
+                { method: "POST",
+                  crossDomain: true,
+                  "Access-Control-Allow-Origin": "*",
+                  url: url,
+                  dataType: "json",
+                  data: data,
+                  encode: true
+                };
             $.ajax(settings).done(callback);
         }
     </code>

@@ -1,0 +1,25 @@
+<h2> Componentes Java Script </h2>
+<p> Tem situações em que o conteudo do site deve ser completamente dinâmico.
+    Tais situações são comuns quando a informação relevante vem total ou parcialmente
+    do servidor, onde é armazenada numa forma diferênte a uma página web, por
+    exemplo, num banco de dados relacional ou num arquivo de texto plano. </p>
+
+<p> Um componente JS é um objeto definido a partir de uma classe que possui toda
+    a informação do compornente e tem uma função especial <code>render</code>
+    para representar o objeto no site mediante a manipulação direta do DOM. </p>
+
+<p> Considere por exemplo o seguinte componente </p>
+
+
+<p> O objeto pode então ser criado a partir de um formulario </p>
+
+<form id="form-obj">
+    <label for="form-title"> Título </label>
+    <input id="form-title" name = "form-title" type="text">
+    <br>
+    <label for="form-description"> Descrição</label>
+    <input id="form-description" name = "form-description" type="text">
+</form>
+<button id="btn-form" type="submit" form="form-obj">Criar</button>
+
+<div id="container-obj"></div>
