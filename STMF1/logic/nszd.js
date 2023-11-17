@@ -200,6 +200,7 @@ export function calcDepletion(date, time, waterLevel,
     var t0 = 0;
     var relHeat = 0;
     var ergBalance = 0;
+    var prevMass = 0;
     for (var i = 0; i < time.length; i++) {
         refreshTempData(i);
         calcThermParams(tempLoc, tempVal, waterLevel[i]);
@@ -228,7 +229,13 @@ export function calcDepletion(date, time, waterLevel,
             }
         }
         listHeat[i] = relHeat/1e6; // J->MJ
-        listMass[i] = relHeat / subsEnergy[subsIndex];
+        var newMass = relHeat / subsEnergy[subsIndex];
+        if (newMass > prevMass){
+            listMass[i] = newMass;
+            prevMass = newMass;
+        } else {
+            listMass[i] = prevMass;
+        }
         listErg[i] = ergBalance/1e6; // J->MJ
         //console.log("progress", 100*i/(time.length-1), "%");
     }

@@ -5,21 +5,86 @@
     exemplo, num banco de dados relacional ou num arquivo de texto plano. </p>
 
 <p> Um componente JS é um objeto definido a partir de uma classe que possui toda
-    a informação do compornente e tem uma função especial <code>render</code>
-    para representar o objeto no site mediante a manipulação direta do DOM. </p>
+    a informação do compornente e possui funções especiais para manipular seu
+    conteudo e a sua aparencia. Em geral, o objeto pode ser representado no site
+    mediante a manipulação direta do DOM, pelas funções da classe. </p>
 
 <p> Considere por exemplo o seguinte componente </p>
-
+<pre>
+    <code>
+        var CARD_COUNT = 0;
+        var CARDS = [];
+        
+        class Card {
+            constructor(params) {
+                params.type = "div";
+                params.className = "card";
+        
+                this.params = params;
+                this.elem = createElem(params);
+                this.setStyle();
+        
+                this.h3 = createElem({
+                    type: "h3",
+                    text: this.params.title,
+                    parent: this.elem
+                });
+                this.p = createElem({
+                    type: "p",
+                    text: this.params.content,
+                    parent: this.elem
+                });
+            }
+            setStyle(){
+                this.elem.style.backgroundColor = "red";
+                this.elem.style.color = "white";
+                this.elem.style.margin = "10px";
+                this.elem.style.padding = "10px";
+                this.elem.style.borderRadius = "10px";
+            }
+        };
+        
+        // create arbitrary element with specified properties
+        function createElem(params) {
+            if (!params.type) return;
+            const elem = document.createElement(params.type);
+            const keys = Object.keys(params);
+            for (var key of keys) {
+                console.log(key, ": ", params[key]);
+                switch (key) {
+                    case "text":
+                        elem.appendChild(document.createTextNode(params.text));
+                        break;
+                    case "parent":
+                        params.parent.appendChild(elem);
+                    case "type":
+                        break;
+                    default:
+                        elem[key] = params[key];
+                        break;
+                }
+            }
+            return elem;
+        }
+    </code>
+</pre>
+<p> Note que para ter maior flexibilidade os parámetros do objeto podem misturar
+    variáveis dos objetos do DOM e variáveis próprias do usuário. Desta maneira
+    é possível configurar o objeto diretamente a partir dos parámetros com pouco
+    código. Note também que os parámetros <code>parent</code> e <code>text</code>
+    possuem um tratamento especial na função auxiliar <code>createElem</code>, no
+    entanto poderia ter sido implementado de outra maneira.
+</p>
 
 <p> O objeto pode então ser criado a partir de um formulario </p>
 
 <form id="form-obj">
     <label for="form-title"> Título </label>
-    <input id="form-title" name = "form-title" type="text">
+    <input id="form-title" name="form-title" type="text">
     <br>
     <label for="form-description"> Descrição</label>
-    <input id="form-description" name = "form-description" type="text">
+    <input id="form-description" name="form-description" type="text">
 </form>
 <button id="btn-form" type="submit" form="form-obj">Criar</button>
 
-<div id="container-obj"></div>
+<div id="container-obj" style="display: flex; flex-wrap: wrap;"></div>

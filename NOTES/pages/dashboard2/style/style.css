@@ -1,0 +1,61 @@
+:root {
+    --sidenav-width: 200px;
+}
+
+body {
+    font-family: "Lato", sans-serif;
+    font-size: 12pt;
+}
+
+#top-banner {
+    position: fixed;
+    background-color: black;
+    color: white;
+    width: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    text-align: center;
+}
+
+#btn-open-side {
+    vertical-align: middle;
+    background-color: black;
+    color: white;
+    border: none;
+    float: left;
+    padding: 20px 10px;
+}
+#btn-open-side:hover{
+    background-color:#393939;
+}
+
+.side-view {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.side-view #btn-close-side {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    margin-left: 50px;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.main-view {
+    background-color: "blue";
+}

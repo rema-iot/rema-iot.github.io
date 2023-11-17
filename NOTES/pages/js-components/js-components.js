@@ -2,46 +2,66 @@ var CARD_COUNT = 0;
 var CARDS = [];
 
 class Card {
-    constructor(idx, title, content, parent){
-        this.type = 'div';
-        this.classname = 'card';                // classname in document
-        this.id = this.classname + "-" + idx;   // document id
-        this.parent = parent;                   // parent node
-        this.elem = undefined;                  // DOM object
-        this.title = title;
-        this.content = content;
+    constructor(params) {
+        params.type = "div";
+        params.className = "card";
+
+        this.params = params;
+        this.elem = createElem(params);
+        this.setStyle();
+
+        this.h3 = createElem({
+            type: "h3",
+            text: this.params.title,
+            parent: this.elem
+        });
+        this.p = createElem({
+            type: "p",
+            text: this.params.content,
+            parent: this.elem
+        });
     }
-    render(){
-        console.log("rendering ", this.id, "on ", this.parent.id);
-        this.elem = document.createElement(this.type);
-        this.elem.classname = this.classname;
-        this.elem.id = this.id;
-
-        let h3 = document.createElement("h3");
-        let h3_text = document.createTextNode(this.title);
-        h3.appendChild(h3_text);
-
-        let p = document.createElement("p");
-        let p_text = document.createTextNode(this.content);
-        p.appendChild(p_text);
-
-        this.elem.appendChild(h3);
-        this.elem.appendChild(p);
-        this.parent.appendChild(this.elem);
-
-        console.log("elem: ", this.elem);
+    setStyle(){
+        this.elem.style.backgroundColor = "red";
+        this.elem.style.color = "white";
+        this.elem.style.margin = "10px";
+        this.elem.style.padding = "10px";
+        this.elem.style.borderRadius = "10px";
     }
 };
 
-export function onLoad(){
+// create arbitrary element with specified properties
+function createElem(params) {
+    if (!params.type) return;
+    const elem = document.createElement(params.type);
+    const keys = Object.keys(params);
+    for (var key of keys) {
+        console.log(key, ": ", params[key]);
+        switch (key) {
+            case "text":
+                elem.appendChild(document.createTextNode(params.text));
+                break;
+            case "parent":
+                params.parent.appendChild(elem);
+            case "type":
+                break;
+            default:
+                elem[key] = params[key];
+                break;
+        }
+    }
+    return elem;
+}
+
+export function onLoad() {
     let btn = document.getElementById("btn-form");
-    btn.onclick = (event)=>{
+    btn.onclick = (event) => {
         event.preventDefault();
+        let id = "card" + CARD_COUNT;
         let parent = document.getElementById("container-obj");
-        let title = document.getElementById("form-title").innerHTML;
-        let content = document.getElementById("form-description").innerHTML;
-        let card = new Card(CARD_COUNT, title, content, parent);
-        card.render();
+        let title = document.getElementById("form-title").value;
+        let content = document.getElementById("form-description").value;
+        let card = new Card({id:id, title:title, content:content, parent:parent});
         CARDS.push(card);
         CARD_COUNT++;
     }

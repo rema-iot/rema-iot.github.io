@@ -1,0 +1,84 @@
+html * {
+    font-family: Nunito, sans-serif;
+}
+
+:root {
+    --sideview-width: 300px;
+    --background-color: rgb(230, 230, 230);
+    --background-sideview-color: rgb(255, 255, 255);
+    --background-carousel-color: rgb(255, 162, 23);
+    --font-carousel-color: rgb(255, 255, 255);
+}
+
+@media (max-width:600px) {
+    :root {
+        --sideview-width: calc(100vw - 18px);
+    }
+}
+
+body {
+    background-color: var(--background-color);
+}
+
+#top-banner {
+    color: rgb(46, 46, 46);
+    text-align: center;
+}
+
+#footer{
+    margin: 20px;
+    text-align: center;
+}
+
+.box {
+    border-radius: 3px;
+    margin: 3px;
+    padding: 1em;
+}
+
+.result {
+    font-size: xx-large;
+    width: fit-content;
+    display: inline;
+}
+
+#content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100vw;
+}
+
+#side-view {
+    width: var(--sideview-width);
+}
+#side-view .box{
+    background-color: var(--background-sideview-color);
+}
+
+#main-view {
+    width: calc(100% - var(--sideview-width) - 30px);
+    min-width: var(--sideview-width);
+}
+
+.carousel {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    /*white-space: nowrap;*/
+}
+
+.carousel div {
+    min-width: 100px;
+    width: 25%;
+    background-color: var(--background-carousel-color);
+    color: var(--font-carousel-color);
+}
+
+.plot {
+    height: 200px;
+    border-radius: 3px;
+    margin: 3px;
+    padding: 1em;
+    background-color: white;
+}

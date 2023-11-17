@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./style/style.css" rel="stylesheet">
+    <!--script src="logic/jQuery 3.7.1.js"></script-->
+    <title>DASHBOARD TEST</title>
+</head>
+
+<body>
+    <div id="top-banner">
+        <button id="btn-open-side" onclick="openNav()"> ⯈ </button>
+        <h3>Dashboard Teste</h3>
+    </div>
+
+    <div class="content" id="content">
+        <div class="side-view" id="side-view">
+            <button id="btn-close-side" onclick="closeNav()"> ◀ </button>
+            <p> Side View </p>
+            <div class="side-elem" id="station-params"></div>
+            <div class="side-elem" id="station-install"></div>
+            <div class="side-elem" id="station-map"></div>
+        </div>
+
+        <div class="main-view">
+            <div> Main View </div>
+            <div class="carousel" id="main-values">
+                <div class="carousel-elem"></div>
+                <div class="carousel-elem"></div>
+                <div class="carousel-elem"></div>
+                <div class="carousel-elem"></div>
+            </div>
+            <div class="plot" id="plot-results"></div>
+            <div class="carousel" id="flow-values">
+                <div class="carousel-elem"></div>
+                <div class="carousel-elem"></div>
+                <div class="carousel-elem"></div>
+            </div>
+            <div class="plot" id="plot-flows"></div>
+            <div class="carousel" id="raw-values">
+                <div class="carousel-elem"></div>
+                <div class="carousel-elem"></div>
+                <div class="carousel-elem"></div>
+            </div>
+            <div class="plot" id="plot-raw"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2023 REMA - UFSC <br>
+    </div>
+</body>
+
+<script>
+    function openNav() {
+        document.getElementById("side-view").style.width = "250px";
+        document.getElementById("main-view").style.marginLeft = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("side-view").style.width = "0";
+        document.getElementById("main-view").style.marginLeft = "0";
+    }
+</script>
+
+</html>
