@@ -17,8 +17,12 @@
     <div id="content">
         <div id="side-view">
             <div class="box" class="side-elem" id="station-params">
-                <h3>Station Info</h3>
-                <table>
+                <div>
+                    <h3>Station Info</h3>
+                    <button class="content-toggler" data-target="station-params-info"> toggle
+                    </button>
+                </div>
+                <table id="station-params-info">
                     <tr>
                         <td>Station Name: </td>
                         <td> Unique ID </td>
@@ -34,20 +38,28 @@
                 </table>
             </div>
             <div class="box" class="side-elem" id="station-install">
-                <h3> Station Diagram </h3>
-                <img src="./img/station-diagram.webp">
+                <div>
+                    <h3>Station Diagram</h3>
+                    <button class="content-toggler" data-target="station-diagram-content"> toggle
+                    </button>
+                </div>
+                <img id = station-diagram-content src="./img/station-diagram.webp">
             </div>
             <div class="box" class="side-elem" id="station-map">
-                 <h3> Station Map </h3>
-                <img src="./img/map-sample.jpg" width="100%">
+                <div>
+                    <h3> Station Map </h3>
+                    <button class="content-toggler" data-target="station-map-content"> toggle
+                    </button>
                 </div>
+                <img id="station-map-content" src="./img/map-sample.jpg" width="100%">
+            </div>
         </div>
 
         <div id="main-view">
             <div class="carousel" id="main-values">
                 <div class="box">
                     <h3> Val Name </h3>
-                    <div class = "result"> 0.0 </div>
+                    <div class="result"> 0.0 </div>
                     m/s
                 </div>
                 <div class="box"> Elem </div>

@@ -1,0 +1,187 @@
+html * {
+    font-family: Nunito, sans-serif;
+}
+
+:root {
+    --sideview-width: 300px;
+    --background-color: rgb(11, 88, 107);
+    --background-sideview-color: rgb(255, 255, 255);
+    --background-carousel-color: rgb(16, 125, 152);
+    --background-carousel-color-hover: rgb(20, 157, 191);
+    --background-stripe-table: rgb(235, 235, 235);
+    --background-float-btn: rgb(16, 125, 152);
+    --background-console: rgba(0, 0, 0, 0.859);
+    --font-carousel-color: rgb(255, 255, 255);
+    --font-carousel-title-color: rgba(255, 254, 251, 0.859);
+    --font-title-color:  rgb(16, 125, 152);
+}
+
+@media (max-width:600px) {
+    :root {
+        --sideview-width: calc(100vw - 18px);
+    }
+}
+
+body {
+    background-color: var(--background-color);
+}
+
+#top-banner {
+    color: var(--background-sideview-color);
+    text-align: center;
+}
+#console {
+    position: fixed;
+    background-color: var(--background-console);
+    color: #FFF;
+    left: 0;
+    bottom: 50px;
+    height: 20vh;
+    padding: 2em;
+    z-index: 2;
+    border-top: 10px;
+    border-bottom: 10px;
+    border-left: 0;
+    border-right: 0;
+    border-style: solid;
+    border-color: var(--background-float-btn);
+    overflow-y: scroll;
+    width: 100vw;
+}
+
+#footer{
+    margin: 20px;
+    text-align: center;
+}
+
+#float-btn{
+	position:fixed;
+	width:50px;
+	height:50px;
+	bottom:20px;
+	right:20px;
+	background-color: var(--background-float-btn);
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px var(--background-color);
+    border: 1px solid #FFF;
+
+    line-height: 50px;
+    z-index: 3;
+}
+
+.box {
+    border-radius: 3px;
+    margin: 3px;
+    padding: 1em;
+}
+.box h3{
+    display: inline-block;
+    color: var(--font-title-color);
+    margin: 0;
+}
+.box .content-toggler{
+    float: right;
+    border: 0;
+    background-color: var(--background-sideview-color);
+
+}
+
+.result {
+    font-size: x-large;
+    width: fit-content;
+    display: inline;
+}
+
+#content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100vw;
+}
+
+#side-view {
+    width: var(--sideview-width);
+}
+#side-view .box{
+    background-color: var(--background-sideview-color);
+}
+
+#main-view {
+    width: calc(100% - var(--sideview-width) - 30px);
+    min-width: var(--sideview-width);
+}
+
+.carousel {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    /*white-space: nowrap;*/
+}
+
+.carousel div {
+    min-width: 100px;
+    width: fit-content;
+    background-color: var(--background-carousel-color);
+    color: var(--font-carousel-color);
+}
+
+.carousel div:hover{
+    background-color: var(--background-carousel-color-hover);
+}
+
+.carousel div h3{
+    color: var(--font-carousel-title-color);
+    text-shadow: 1px 1px 3px rgb(75, 75, 75);
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: var(--background-color);
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--background-carousel-color);
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--background-carousel-color-hover);
+  }
+
+tr:nth-child(odd) {
+    background-color: var(--background-stripe-table);
+}
+
+td{
+    padding: 5px;
+}
+
+.plot {
+    /*min-width: 500px;*/
+    overflow-x: scroll;
+    border-radius: 3px;
+    margin: 3px;
+    padding: 1em;
+    background-color: white;
+}
+
+.plot h3{
+    display: inline-block;
+    color: var(--font-title-color);
+    margin: 0;
+}
+.plot .content-toggler{
+    float: right;
+    border: 0;
+    background-color: var(--background-sideview-color);
+
+}

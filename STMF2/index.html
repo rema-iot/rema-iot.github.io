@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./style/style.css" rel="stylesheet">
+    <script src="../JSTK/jQuery 3.7.1.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
+    <title>STMF2</title>
+</head>
+
+<body>
+    <div id="top-banner">
+        <h2>Sistema de Monitoramento Termodinâmico de Fontes de Contaminação</h2>
+    </div>
+
+    <a href="#" id="float-btn">
+        🖵
+    </a>
+
+    <div id="console" style="display: none;">
+        LOG DETALHADO STMF 2.0 <br>
+    </div>
+
+    <div id="content">
+        <div id="side-view">
+            <div class="box" class="side-elem" id="station-params">
+                <div>
+                    <h3>Informação da Estação</h3>
+                    <img class="content-toggler" id="station-params-toggler"
+                         src="img/loading.gif" width="20px"
+                         data-target="station-params-info">
+                </div>
+                <table id="station-params-info" data-ready="wait">
+                    <tr>
+                        <td>Nome: </td>
+                        <td id="station-name"> </td>
+                    </tr>
+                    <tr>
+                        <td>Ativação: </td>
+                        <td id="station-act"> </td>
+                    </tr>
+                    <tr>
+                        <td> Freq. postagem: </td>
+                        <td id="station-freq"> </td>
+                    </tr>
+                    <tr>
+                        <td>Latitude: </td>
+                        <td id="station-lat"> </td>
+                    </tr>
+                    <tr>
+                        <td>Longitude: </td>
+                        <td id="station-lon"> </td>
+                    </tr>
+                    <tr>
+                        <td>Sondas de fluxo: </td>
+                        <td id="station-flx-cnt"> </td>
+                    </tr>
+                    <tr>
+                        <td>Sondas de humidade: </td>
+                        <td id="station-hum-cnt"> </td>
+                    </tr>
+                    <tr>
+                        <td>Sondas de nível d'água: </td>
+                        <td id="station-wl-cnt"> </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="box" class="side-elem" id="station-install">
+                <div>
+                    <h3>Diagrama da Estação</h3>
+                    <img class="content-toggler"
+                         src="img/loading.gif" width="20px"
+                         data-target="station-diagram-content">
+                </div>
+                <img id=station-diagram-content src="./img/station-diagram.webp">
+            </div>
+
+            <div class="box" class="side-elem" id="station-map">
+                <div>
+                    <h3> Localização </h3>
+                    <img class="content-toggler" id="station-map-toggler"
+                         src="img/loading.gif" width="20px"
+                         data-target="station-map-content">
+                </div>
+
+                <div id="station-map-content" data-ready="wait">
+                    <iframe id="station-map-frame" data-ready="wait" width=98% height="350"
+                        style="border: 1px solid rgb(123, 123, 123)">
+                    </iframe> <br />
+                    <small>
+                        <a id="station-map-link" href="https://www.openstreetmap.org/#map=16/-27.6835/-48.5480"
+                            target="_blank">
+                            Visitar Mapa
+                        </a>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div id="main-view">
+            <div class="carousel" id="main-values">
+                <div class="box">
+                    <h3> Val Name </h3>
+                    <div class="result"> 0.0 </div>
+                    m/s
+                </div>
+                <div class="box"> Elem </div>
+                <div class="box"> Elem </div>
+                <div class="box"> Elem </div>
+                <div class="box"> Elem </div>
+                <div class="box"> Elem </div>
+                <div class="box"> Elem </div>
+            </div>
+            <div class="plot" id="plot-results"> Plot Results </div>
+            <div class="carousel" id="flow-values">
+                <div class="box" class="carousel-elem"> Elem </div>
+                <div class="box" class="carousel-elem"> Elem </div>
+                <div class="box" class="carousel-elem"> Elem </div>
+                <div class="box" class="carousel-elem"> Elem </div>
+            </div>
+            <div class="plot" id="plot-flows"> Plot Flows </div>
+
+            <div class="carousel" id="raw-values"></div>
+            <div class="plot" id="block-plot-raw">
+                <div class="header">
+                    <h3>Dados brutos da estação</h3>
+                    <img class="content-toggler" id="plot-raw-toggler"
+                         src="img/loading.gif" width="20px"
+                         data-target="plot-raw">
+                </div>
+                <div id="plot-raw" data-ready="wait" style="min-width: 500;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        © 2023 REMA - UFSC <br>
+    </div>
+</body>
+<script src="./logic/main.js" type="module"></script>
+
+</html>
