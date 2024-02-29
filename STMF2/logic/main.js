@@ -1,4 +1,4 @@
-import { getStationInfo, getProcessData } from "./data.js";
+import { getStationInfo, getProcessData} from "./data.js";
 import { loadSession } from "./session.js"
 
 // call after load

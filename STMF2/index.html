@@ -58,6 +58,22 @@
                         <td id="station-flx-cnt"> </td>
                     </tr>
                     <tr>
+                        <td>Raio do arranjo: </td>
+                        <td id="station-flx-array-rad"> </td>
+                    </tr>
+                    <tr>
+                        <td>Prof. do arranjo: </td>
+                        <td id="station-flx-array-dep"> </td>
+                    </tr>
+                    <tr>
+                        <td>Raio das sondas: </td>
+                        <td id="station-flx-probe-rad"> </td>
+                    </tr>
+                    <tr>
+                        <td>Alt. das sondas: </td>
+                        <td id="station-flx-probe-hei"> </td>
+                    </tr>
+                    <tr>
                         <td>Sondas de humidade: </td>
                         <td id="station-hum-cnt"> </td>
                     </tr>
@@ -115,13 +131,17 @@
                 <div class="box"> Elem </div>
             </div>
             <div class="plot" id="plot-results"> Plot Results </div>
-            <div class="carousel" id="flow-values">
-                <div class="box" class="carousel-elem"> Elem </div>
-                <div class="box" class="carousel-elem"> Elem </div>
-                <div class="box" class="carousel-elem"> Elem </div>
-                <div class="box" class="carousel-elem"> Elem </div>
+            
+            <div class="carousel" id="flow-values"> </div>
+            <div class="plot" id="block-plot-flows"> 
+                <div class="header">
+                    <h3>Fluxos de calor</h3>
+                    <img class="content-toggler" id="plot-flows-toggler"
+                         src="img/loading.gif" width="20px"
+                         data-target="plot-flows">
+                </div>
+                <div id="plot-flows" data-ready="wait" style="min-width: 500;"></div>
             </div>
-            <div class="plot" id="plot-flows"> Plot Flows </div>
 
             <div class="carousel" id="raw-values"></div>
             <div class="plot" id="block-plot-raw">
